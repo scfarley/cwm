@@ -31,20 +31,42 @@
 
 #include "calmwm.h"
 
+/* Get the X, Y coordinates and root window of pointer. */
 void
-xu_ptr_get(Window win, int *x, int *y)
+xu_ptr_get(Window win, int *x, int *y, Window *rootwin)
 {
-	Window		 w0, w1;
+	Window		 w0;
+	Window		 w1;
 	int		 tmp0, tmp1;
 	unsigned int	 tmp2;
 
-	XQueryPointer(X_Dpy, win, &w0, &w1, &tmp0, &tmp1, x, y, &tmp2);
+	if (rootwin == NULL)
+		rootwin = &w0;
+	XQueryPointer(X_Dpy, win, rootwin, &w1, x, y, &tmp0, &tmp1, &tmp2);
 }
 
 void
 xu_ptr_set(Window win, int x, int y)
 {
 	XWarpPointer(X_Dpy, None, win, 0, 0, 0, 0, x, y);
+}
+
+/*
+ * Return the screen number where the pointer is located.  Upon failure, return
+ * zero.
+ */
+int
+xu_ptr_get_screen(void)
+{
+	XWindowAttributes attr;
+	Window		 rootwin;
+	int		 x, y;
+
+	xu_ptr_get(DefaultRootWindow(X_Dpy), &x, &y, &rootwin);
+	if (XGetWindowAttributes(X_Dpy, rootwin, &attr) == 0) {
+		return (0);
+	}
+	return (XScreenNumberOfScreen(attr.screen));
 }
 
 int
@@ -187,6 +209,45 @@ xu_atom_init(void)
 
 	XInternAtoms(X_Dpy, cwmhints, nitems(cwmhints), False, cwmh);
 	XInternAtoms(X_Dpy, ewmhints, nitems(ewmhints), False, ewmh);
+}
+
+/* Spawn command on same DISPLAY as pointer. */
+void
+xu_spawn(char *cmd)
+{
+	const char	*display;
+	char		*loc, *new_display = NULL;
+	size_t		length;
+
+	/* Get DISPLAY stored at time of opening the display and calculate its
+	 * length up to but not including the possible '.' separator for the
+	 * screen.  Skip to the colon first to avoid dotted hosts.
+	 *
+	 * If all else fails to parse the display, spawn the command without
+	 * touching DISPLAY.
+	 */
+	display = DisplayString(X_Dpy);
+	loc = strchr(display, ':');
+	if (loc != NULL) {
+		loc = strchr(loc, '.');
+		if (loc == NULL) {
+			length = strlen(display);
+		} else {
+			length = loc - display;
+		}
+
+		/* Create new DISPLAY for child process. */
+		if (asprintf(&new_display, "%.*s.%d", (int)length, display,
+		    xu_ptr_get_screen()) == -1) {
+			warnx("failure to generate new DISPLAY");
+		}
+
+		LOG_DEBUG3("spawning %s on display %s", cmd, new_display);
+	} else
+		LOG_DEBUG3("spawning %s", cmd);
+
+	u_spawn(cmd, new_display);
+	free(new_display);
 }
 
 /* Root Window Properties */

@@ -87,7 +87,7 @@ kbfunc_ptrmove(void *ctx, struct cargs *cargs)
 
 	kbfunc_amount(cargs->flag, Conf.mamount, &mx, &my);
 
-	xu_ptr_get(sc->rootwin, &x, &y);
+	xu_ptr_get(sc->rootwin, &x, &y, NULL);
 	xu_ptr_set(sc->rootwin, x + mx, y + my);
 }
 
@@ -579,7 +579,7 @@ kbfunc_menu_cmd(void *ctx, struct cargs *cargs)
 	if ((mi = menu_filter(sc, &menuq, "application", NULL, mflags,
 	    search_match_cmd, search_print_cmd)) != NULL) {
 		cmd = (struct cmd_ctx *)mi->ctx;
-		u_spawn(cmd->path);
+		xu_spawn(cmd->path);
 	}
 
 	menuq_clear(&menuq);
@@ -698,7 +698,7 @@ kbfunc_menu_exec(void *ctx, struct cargs *cargs)
 	    search_match_exec, search_print_text)) != NULL) {
 		if (mi->text[0] == '\0')
 			goto out;
-		u_spawn(mi->text);
+		xu_spawn(mi->text);
 	}
 out:
 	if (mi != NULL && mi->dummy)
@@ -764,7 +764,7 @@ menu:
 		    cmd->path, mi->text, mi->text);
 		if (l == -1 || l >= sizeof(path))
 			goto out;
-		u_spawn(path);
+		xu_spawn(path);
 	}
 out:
 	if (mi != NULL && mi->dummy)
@@ -796,7 +796,7 @@ kbfunc_client_menu_label(void *ctx, struct cargs *cargs)
 void
 kbfunc_exec_cmd(void *ctx, struct cargs *cargs)
 {
-	u_spawn(cargs->cmd);
+	xu_spawn(cargs->cmd);
 }
 
 void
@@ -806,7 +806,7 @@ kbfunc_exec_term(void *ctx, struct cargs *cargs)
 
 	TAILQ_FOREACH(cmd, &Conf.cmdq, entry) {
 		if (strcmp(cmd->name, "term") == 0)
-			u_spawn(cmd->path);
+			xu_spawn(cmd->path);
 	}
 }
 
@@ -817,6 +817,6 @@ kbfunc_exec_lock(void *ctx, struct cargs *cargs)
 
 	TAILQ_FOREACH(cmd, &Conf.cmdq, entry) {
 		if (strcmp(cmd->name, "lock") == 0)
-			u_spawn(cmd->path);
+			xu_spawn(cmd->path);
 	}
 }

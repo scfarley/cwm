@@ -89,12 +89,13 @@ menu_filter(struct screen_ctx *sc, struct menu_q *menuq, const char *prompt,
 	struct menu_q		 resultq;
 	struct menu		*mi = NULL;
 	XEvent			 e;
-	Window			 focuswin;
+	Window			 focuswin, rootwin;
 	int			 focusrevert, xsave, ysave, xcur, ycur;
 
 	TAILQ_INIT(&resultq);
 
-	xu_ptr_get(sc->rootwin, &xsave, &ysave);
+	/* Get current position to determine if user moves. */
+	xu_ptr_get(sc->rootwin, &xsave, &ysave, &rootwin);
 
 	(void)memset(&mc, 0, sizeof(mc));
 	mc.sc = sc;
@@ -178,9 +179,9 @@ out:
 
 	XSetInputFocus(X_Dpy, focuswin, focusrevert, CurrentTime);
 	/* restore if user didn't move */
-	xu_ptr_get(sc->rootwin, &xcur, &ycur);
-	if (xcur == mc.geom.x && ycur == mc.geom.y)
-		xu_ptr_set(sc->rootwin, xsave, ysave);
+	xu_ptr_get(sc->rootwin, &xcur, &ycur, &rootwin);
+	if (xcur == mc.geom.x && ycur == mc.geom.y && rootwin == sc->rootwin)
+		xu_ptr_set(rootwin, xsave, ysave);
 
 	XUngrabPointer(X_Dpy, CurrentTime);
 	XUngrabKeyboard(X_Dpy, CurrentTime);

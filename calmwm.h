@@ -574,11 +574,13 @@ void			 xev_process(void);
 
 int			 xu_get_prop(Window, Atom, Atom, long, unsigned char **);
 int			 xu_get_strprop(Window, Atom, char **);
-void			 xu_ptr_get(Window, int *, int *);
+void			 xu_ptr_get(Window, int *, int *, Window *);
+int			 xu_ptr_get_screen();
 void			 xu_ptr_set(Window, int, int);
 void			 xu_get_wm_state(Window, long *);
 void			 xu_set_wm_state(Window, long);
 void			 xu_send_clientmsg(Window, Atom, Time);
+void			 xu_spawn(char *);
 void 			 xu_xorcolor(XftColor, XftColor, XftColor *);
 
 void			 xu_atom_init(void);
@@ -607,7 +609,7 @@ void 			 xu_ewmh_restore_net_wm_state(struct client_ctx *);
 
 char			*u_argv(char * const *);
 void			 u_exec(char *);
-void			 u_spawn(char *);
+void			 u_spawn(char *, const char *);
 void			 log_debug(int, const char *, const char *, ...)
 			    __attribute__((__format__ (printf, 3, 4)))
 			    __attribute__((__nonnull__ (3)));

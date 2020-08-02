@@ -35,10 +35,14 @@
 static void	 log_msg(const char *, va_list);
 
 void
-u_spawn(char *argstr)
+u_spawn(char *argstr, const char *display)
 {
 	switch (fork()) {
 	case 0:
+		/* Exec application and on DISPLAY, if requested. */
+		if (display != NULL)
+			if (setenv("DISPLAY", display, 1) != 0)
+				warn("setenv");
 		u_exec(argstr);
 		exit(1);
 	case -1:

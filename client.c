@@ -502,7 +502,7 @@ void
 client_ptr_inbound(struct client_ctx *cc, int getpos)
 {
 	if (getpos)
-		xu_ptr_get(cc->win, &cc->ptr.x, &cc->ptr.y);
+		xu_ptr_get(cc->win, &cc->ptr.x, &cc->ptr.y, NULL);
 
 	if (cc->ptr.x < 0)
 		cc->ptr.x = 0;
@@ -527,7 +527,7 @@ client_ptr_save(struct client_ctx *cc)
 {
 	int	 x, y;
 
-	xu_ptr_get(cc->win, &x, &y);
+	xu_ptr_get(cc->win, &x, &y, NULL);
 	if (client_inbound(cc, x, y)) {
 		cc->ptr.x = x;
 		cc->ptr.y = y;
@@ -713,7 +713,7 @@ client_placement(struct client_ctx *cc)
 		struct geom	 area;
 		int		 xmouse, ymouse, xslack, yslack;
 
-		xu_ptr_get(sc->rootwin, &xmouse, &ymouse);
+		xu_ptr_get(sc->rootwin, &xmouse, &ymouse, NULL);
 		area = screen_area(sc, xmouse, ymouse, 1);
 
 		xmouse = MAX(MAX(xmouse, area.x) - cc->geom.w / 2, area.x);
