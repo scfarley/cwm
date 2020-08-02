@@ -61,7 +61,7 @@ group_hide(struct group_ctx *gc)
 			continue;
 		if (!(cc->flags & CLIENT_STICKY) &&
 		    !(cc->flags & CLIENT_HIDDEN))
-			client_hide(cc);
+			client_hide(cc, False);
 	}
 }
 
@@ -75,7 +75,8 @@ group_show(struct group_ctx *gc)
 		if (cc->gc != gc)
 			continue;
 		if (!(cc->flags & CLIENT_STICKY) &&
-		     (cc->flags & CLIENT_HIDDEN))
+		     (cc->flags & CLIENT_HIDDEN) &&
+		     !xu_ewmh_get_net_wm_state_atom(cc, _NET_WM_STATE_HIDDEN))
 			client_show(cc);
 	}
 	group_restack(gc);
@@ -158,7 +159,7 @@ group_movetogroup(struct client_ctx *cc, int idx)
 			if (cc->gc == gc)
 				return;
 			if (gc->num != 0 && group_holds_only_hidden(gc))
-				client_hide(cc);
+				client_hide(cc, False);
 			group_assign(gc, cc);
 		}
 	}

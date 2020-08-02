@@ -131,6 +131,7 @@ static const struct {
 	{ FUNC_CC(window-resize-left-big, client_resize, (CWM_LEFT_BIG)) },
 	{ FUNC_CC(window-menu-label, client_menu_label, 0) },
 
+	{ FUNC_SC(window-hide-ingroup, client_hide_ingroup, 0) },
 	{ FUNC_SC(window-cycle, client_cycle, (CWM_CYCLE_FORWARD)) },
 	{ FUNC_SC(window-rcycle, client_cycle, (CWM_CYCLE_REVERSE)) },
 	{ FUNC_SC(window-cycle-ingroup, client_cycle,

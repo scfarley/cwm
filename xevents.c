@@ -390,7 +390,7 @@ xev_handle_clientmessage(XEvent *ee)
 	if (e->message_type == cwmh[WM_CHANGE_STATE]) {
 		if ((cc = client_find(e->window)) != NULL) {
 	    		if (e->data.l[0] == IconicState)
-				client_hide(cc);
+				client_hide(cc, True);
 		}
 	} else if (e->message_type == ewmh[_NET_CLOSE_WINDOW]) {
 		if ((cc = client_find(e->window)) != NULL) {

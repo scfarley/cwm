@@ -418,7 +418,7 @@ struct client_ctx	*client_current(struct screen_ctx *);
 void			 client_draw_border(struct client_ctx *);
 struct client_ctx	*client_find(Window);
 void			 client_get_sizehints(struct client_ctx *);
-void			 client_hide(struct client_ctx *);
+void			 client_hide(struct client_ctx *, Bool);
 void 			 client_htile(struct client_ctx *);
 int			 client_inbound(struct client_ctx *, int, int);
 struct client_ctx	*client_init(Window, struct screen_ctx *);
@@ -520,6 +520,7 @@ void			 kbfunc_client_toggle_hmaximize(void *, struct cargs *);
 void			 kbfunc_client_toggle_vmaximize(void *, struct cargs *);
 void 			 kbfunc_client_htile(void *, struct cargs *);
 void 			 kbfunc_client_vtile(void *, struct cargs *);
+void			 kbfunc_client_hide_ingroup(void *, struct cargs *);
 void			 kbfunc_client_cycle(void *, struct cargs *);
 void			 kbfunc_client_toggle_group(void *, struct cargs *);
 void			 kbfunc_client_movetogroup(void *, struct cargs *);
@@ -597,6 +598,8 @@ void			 xu_ewmh_net_desktop_names(struct screen_ctx *);
 int			 xu_ewmh_get_net_wm_desktop(struct client_ctx *, long *);
 void			 xu_ewmh_set_net_wm_desktop(struct client_ctx *);
 Atom 			*xu_ewmh_get_net_wm_state(struct client_ctx *, int *);
+Bool			 xu_ewmh_get_net_wm_state_atom(struct client_ctx *,
+			     Atom);
 void 			 xu_ewmh_handle_net_wm_state_msg(struct client_ctx *,
 			     int, Atom, Atom);
 void 			 xu_ewmh_set_net_wm_state(struct client_ctx *);

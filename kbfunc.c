@@ -355,7 +355,7 @@ kbfunc_client_raise(void *ctx, struct cargs *cargs)
 void
 kbfunc_client_hide(void *ctx, struct cargs *cargs)
 {
-	client_hide(ctx);
+	client_hide(ctx, True);
 }
 
 void
@@ -404,6 +404,21 @@ void
 kbfunc_client_vtile(void *ctx, struct cargs *cargs)
 {
 	client_vtile(ctx);
+}
+
+/* Hide all clients within current group. */
+void
+kbfunc_client_hide_ingroup(void *ctx, struct cargs *cargs)
+{
+	struct screen_ctx	*sc = ctx;
+	struct client_ctx	*cc;
+	int			 idx;
+
+	idx = sc->group_active->num;
+	TAILQ_FOREACH(cc, &sc->clientq, entry) {
+		if (cc->gc->num == idx)
+			client_hide(cc, True);
+	}
 }
 
 void
@@ -519,7 +534,7 @@ kbfunc_menu_client(void *ctx, struct cargs *cargs)
 	struct menu_q		 menuq;
 	int			 mflags = 0;
 
-	if (cargs->xev == CWM_XEV_BTN)
+	if (cargs->xev == CWM_XEV_KEY || cargs->xev == CWM_XEV_BTN)
 		mflags |= CWM_MENU_LIST;
 
 	TAILQ_INIT(&menuq);
@@ -668,7 +683,7 @@ kbfunc_menu_exec(void *ctx, struct cargs *cargs)
 				/* lstat(2) in case d_type isn't supported. */
 				if (lstat(tpath, &sb) == -1)
 					continue;
-				if (!S_ISREG(sb.st_mode) && 
+				if (!S_ISREG(sb.st_mode) &&
 				    !S_ISLNK(sb.st_mode))
 					continue;
 			}
@@ -724,7 +739,7 @@ kbfunc_menu_ssh(void *ctx, struct cargs *cargs)
 		buf = lbuf;
 		if (buf[slen - 1] == '\n')
 			buf[slen - 1] = '\0';
-		
+
 		/* skip hashed hosts */
 		if (strncmp(buf, HASH_MARKER, strlen(HASH_MARKER)) == 0)
 			continue;

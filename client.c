@@ -123,7 +123,7 @@ client_init(Window win, struct screen_ctx *sc)
 
 	xu_get_wm_state(cc->win, &state);
 	if (state == IconicState)
-		client_hide(cc);
+		client_hide(cc, True);
 	else
 		client_show(cc);
 
@@ -538,7 +538,7 @@ client_ptr_save(struct client_ctx *cc)
 }
 
 void
-client_hide(struct client_ctx *cc)
+client_hide(struct client_ctx *cc, Bool set_ewmh_state)
 {
 	XUnmapWindow(X_Dpy, cc->win);
 
@@ -548,6 +548,8 @@ client_hide(struct client_ctx *cc)
 	}
 	cc->flags |= CLIENT_HIDDEN;
 	xu_set_wm_state(cc->win, IconicState);
+	if (set_ewmh_state)
+		xu_ewmh_set_net_wm_state(cc);
 }
 
 void
@@ -556,6 +558,7 @@ client_show(struct client_ctx *cc)
 	XMapRaised(X_Dpy, cc->win);
 
 	cc->flags &= ~CLIENT_HIDDEN;
+	xu_ewmh_set_net_wm_state(cc);
 	xu_set_wm_state(cc->win, NormalState);
 	client_draw_border(cc);
 }
@@ -633,7 +636,7 @@ void
 client_wm_hints(struct client_ctx *cc)
 {
 	XWMHints	*wmh;
- 
+
 	if ((wmh = XGetWMHints(X_Dpy, cc->win)) != NULL) {
 		if ((wmh->flags & InputHint) && (wmh->input))
 			cc->flags |= CLIENT_INPUT;

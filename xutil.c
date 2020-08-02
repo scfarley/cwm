@@ -430,6 +430,24 @@ xu_ewmh_get_net_wm_state(struct client_ctx *cc, int *n)
 	return state;
 }
 
+/* Return whether atom is set in _NET_WM_STATE. */
+Bool
+xu_ewmh_get_net_wm_state_atom(struct client_ctx *cc, Atom atom)
+{
+	Atom	*atoms;
+	int	 i, n;
+
+	atoms = xu_ewmh_get_net_wm_state(cc, &n);
+	for (i = 0; i < n; i++)
+		if (atoms[i] == ewmh[atom])
+			break;
+	free(atoms);
+
+	if (i < n)
+		return True;
+	return False;
+}
+
 void
 xu_ewmh_handle_net_wm_state_msg(struct client_ctx *cc, int action,
     Atom first, Atom second)
