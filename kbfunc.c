@@ -120,28 +120,33 @@ kbfunc_client_move_kb(void *ctx, struct cargs *cargs)
 	if (cc->flags & CLIENT_FREEZE)
 		return;
 
-	kbfunc_amount(cargs->flag, Conf.mamount, &mx, &my);
+	if (cargs->flag == CWM_CENTER) {
+		cc->geom.x = ((sc->view.w - cc->geom.w) / 2) - cc->bwidth - 1;
+		cc->geom.y = ((sc->view.h - cc->geom.h) / 2) - cc->bwidth - 1;
+	} else {
+		kbfunc_amount(cargs->flag, Conf.mamount, &mx, &my);
 
-	cc->geom.x += mx;
-	if (cc->geom.x < -(cc->geom.w + cc->bwidth - 1))
-		cc->geom.x = -(cc->geom.w + cc->bwidth - 1);
-	if (cc->geom.x > (sc->view.w - cc->bwidth - 1))
-		cc->geom.x = sc->view.w - cc->bwidth - 1;
-	cc->geom.y += my;
-	if (cc->geom.y < -(cc->geom.h + cc->bwidth - 1))
-		cc->geom.y = -(cc->geom.h + cc->bwidth - 1);
-	if (cc->geom.y > (sc->view.h - cc->bwidth - 1))
-		cc->geom.y = sc->view.h - cc->bwidth - 1;
+		cc->geom.x += mx;
+		if (cc->geom.x < -(cc->geom.w + cc->bwidth - 1))
+			cc->geom.x = -(cc->geom.w + cc->bwidth - 1);
+		if (cc->geom.x > (sc->view.w - cc->bwidth - 1))
+			cc->geom.x = sc->view.w - cc->bwidth - 1;
+		cc->geom.y += my;
+		if (cc->geom.y < -(cc->geom.h + cc->bwidth - 1))
+			cc->geom.y = -(cc->geom.h + cc->bwidth - 1);
+		if (cc->geom.y > (sc->view.h - cc->bwidth - 1))
+			cc->geom.y = sc->view.h - cc->bwidth - 1;
 
-	area = screen_area(sc,
-	    cc->geom.x + cc->geom.w / 2,
-	    cc->geom.y + cc->geom.h / 2, 1);
-	cc->geom.x += client_snapcalc(cc->geom.x,
-	    cc->geom.x + cc->geom.w + (cc->bwidth * 2),
-	    area.x, area.x + area.w, sc->snapdist);
-	cc->geom.y += client_snapcalc(cc->geom.y,
-	    cc->geom.y + cc->geom.h + (cc->bwidth * 2),
-	    area.y, area.y + area.h, sc->snapdist);
+		area = screen_area(sc,
+		    cc->geom.x + cc->geom.w / 2,
+		    cc->geom.y + cc->geom.h / 2, 1);
+		cc->geom.x += client_snapcalc(cc->geom.x,
+		    cc->geom.x + cc->geom.w + (cc->bwidth * 2),
+		    area.x, area.x + area.w, sc->snapdist);
+		cc->geom.y += client_snapcalc(cc->geom.y,
+		    cc->geom.y + cc->geom.h + (cc->bwidth * 2),
+		    area.y, area.y + area.h, sc->snapdist);
+	}
 
 	client_move(cc);
 	client_ptr_inbound(cc, 1);

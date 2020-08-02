@@ -119,6 +119,7 @@ static const struct {
 	{ FUNC_CC(window-move-down-big, client_move, (CWM_DOWN_BIG)) },
 	{ FUNC_CC(window-move-right-big, client_move, (CWM_RIGHT_BIG)) },
 	{ FUNC_CC(window-move-left-big, client_move, (CWM_LEFT_BIG)) },
+	{ FUNC_CC(window-move-center, client_move, (CWM_CENTER)) },
 	{ FUNC_CC(window-resize, client_resize, 0) },
 	{ FUNC_CC(window-resize-up, client_resize, (CWM_UP)) },
 	{ FUNC_CC(window-resize-down, client_resize, (CWM_DOWN)) },

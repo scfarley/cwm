@@ -84,6 +84,7 @@ size_t strlcpy(char *, const char *, size_t);
 #define CWM_UP_LEFT		(CWM_UP | CWM_LEFT)
 #define CWM_DOWN_RIGHT		(CWM_DOWN | CWM_RIGHT)
 #define CWM_DOWN_LEFT		(CWM_DOWN | CWM_LEFT)
+#define CWM_CENTER		(CWM_UP | CWM_DOWN | CWM_LEFT | CWM_RIGHT)
 
 #define CWM_CYCLE_FORWARD	0x0001
 #define CWM_CYCLE_REVERSE	0x0002
