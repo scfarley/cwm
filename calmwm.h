@@ -337,12 +337,12 @@ struct mwm_hints {
 #define MWM_FLAGS_INPUT_MODE	(1<<2)
 	unsigned long	flags;
 
-#define MWM_FUNCS_ALL		(1<<0)
-#define MWM_FUNCS_RESIZE	(1<<1)
-#define MWM_FUNCS_MOVE		(1<<2)
-#define MWM_FUNCS_MINIMIZE	(1<<3)
-#define MWM_FUNCS_MAXIMIZE	(1<<4)
-#define MWM_FUNCS_CLOSE		(1<<5)
+#define MWM_FUNC_ALL		(1<<0)
+#define MWM_FUNC_RESIZE		(1<<1)
+#define MWM_FUNC_MOVE		(1<<2)
+#define MWM_FUNC_MINIMIZE	(1<<3)
+#define MWM_FUNC_MAXIMIZE	(1<<4)
+#define MWM_FUNC_CLOSE		(1<<5)
 	unsigned long	functions;
 
 #define	MWM_DECOR_ALL		(1<<0)
@@ -597,7 +597,7 @@ int			 xu_ewmh_get_net_wm_desktop(struct client_ctx *, long *);
 void			 xu_ewmh_set_net_wm_desktop(struct client_ctx *);
 Atom 			*xu_ewmh_get_net_wm_state(struct client_ctx *, int *);
 void 			 xu_ewmh_handle_net_wm_state_msg(struct client_ctx *,
-			     int, Atom , Atom);
+			     int, Atom, Atom);
 void 			 xu_ewmh_set_net_wm_state(struct client_ctx *);
 void 			 xu_ewmh_restore_net_wm_state(struct client_ctx *);
 
